@@ -39,6 +39,7 @@ interface Product {
   name: string
   price: number
   category: string
+  image: string
   addOns?: AddOn[]
 }
 
@@ -86,12 +87,33 @@ const addOnsData: { [key: number]: AddOn[] } = {
 }
 
 const products: Product[] = [
-  { id: 1, name: "Nasi Gudeg", price: 15000, category: "Makanan", addOns: addOnsData[1] },
-  { id: 2, name: "Sate Ayam", price: 20000, category: "Makanan", addOns: addOnsData[2] },
-  { id: 3, name: "Es Teh Manis", price: 5000, category: "Minuman" },
-  { id: 4, name: "Kopi Tubruk", price: 8000, category: "Minuman" },
-  { id: 5, name: "Bakso", price: 12000, category: "Makanan", addOns: addOnsData[5] },
-  { id: 6, name: "Es Jeruk", price: 7000, category: "Minuman" },
+  {
+    id: 1,
+    name: "Nasi Gudeg",
+    price: 15000,
+    category: "Makanan",
+    image: "/nasi-gudeg.png",
+    addOns: addOnsData[1],
+  },
+  {
+    id: 2,
+    name: "Sate Ayam",
+    price: 20000,
+    category: "Makanan",
+    image: "/grilled-chicken-satay.png",
+    addOns: addOnsData[2],
+  },
+  { id: 3, name: "Es Teh Manis", price: 5000, category: "Minuman", image: "/es-teh-manis-glass.png" },
+  { id: 4, name: "Kopi Tubruk", price: 8000, category: "Minuman", image: "/kopi-tubruk.png" },
+  {
+    id: 5,
+    name: "Bakso",
+    price: 12000,
+    category: "Makanan",
+    image: "/bakso-indonesian-meatball-soup.png",
+    addOns: addOnsData[5],
+  },
+  { id: 6, name: "Es Jeruk", price: 7000, category: "Minuman", image: "/placeholder-u3yhk.png" },
 ]
 
 export default function POSSystem() {
@@ -535,24 +557,35 @@ export default function POSSystem() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               {filteredProducts.map((product) => (
                 <Card key={product.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg">{product.name}</CardTitle>
-                      <Badge variant="secondary">{product.category}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-green-600">
-                        Rp {product.price.toLocaleString("id-ID")}
-                      </span>
-                      <Button onClick={() => addToCart(product)} size="sm">
-                        <Plus className="w-4 h-4 mr-1" />
-                        Tambah
-                      </Button>
+                  <CardContent className="p-3">
+                    <div className="flex gap-3 items-start">
+                      <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                        <img
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-semibold text-sm leading-tight truncate">{product.name}</h3>
+                          <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                            {product.category}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-bold text-green-600">
+                            Rp {product.price.toLocaleString("id-ID")}
+                          </span>
+                          <Button onClick={() => addToCart(product)} size="sm" className="text-xs px-2 py-1 h-7">
+                            <Plus className="w-3 h-3 mr-1" />
+                            Tambah
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
