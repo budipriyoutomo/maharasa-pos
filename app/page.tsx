@@ -480,12 +480,12 @@ export default function MaharasaPOS() {
             )}
 
             {/* Number Pad */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((digit) => (
                 <button
                   key={digit}
                   onClick={() => handlePinPress(digit)}
-                  className="h-14 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xl font-semibold transition-all duration-150 border border-white/10 hover:border-white/30"
+                  className="h-12 sm:h-14 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-lg sm:text-xl font-semibold transition-all duration-150 border border-white/10 hover:border-white/30"
                 >
                   {digit}
                 </button>
@@ -493,19 +493,19 @@ export default function MaharasaPOS() {
               <div /> {/* empty cell */}
               <button
                 onClick={() => handlePinPress("0")}
-                className="h-14 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xl font-semibold transition-all duration-150 border border-white/10 hover:border-white/30"
+                className="h-12 sm:h-14 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-lg sm:text-xl font-semibold transition-all duration-150 border border-white/10 hover:border-white/30"
               >
                 0
               </button>
               <button
                 onClick={handlePinDelete}
-                className="h-14 rounded-xl bg-white/10 hover:bg-red-500/30 active:bg-red-500/50 text-white transition-all duration-150 border border-white/10 flex items-center justify-center"
+                className="h-12 sm:h-14 rounded-xl bg-white/10 hover:bg-red-500/30 active:bg-red-500/50 text-white transition-all duration-150 border border-white/10 flex items-center justify-center"
               >
                 <Delete className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-slate-500 text-xs text-center mt-5">Demo PIN: 1234</p>
+            <p className="text-slate-500 text-xs text-center mt-4 sm:mt-5">Demo PIN: 1234</p>
           </div>
         </div>
       </div>
@@ -517,7 +517,7 @@ export default function MaharasaPOS() {
     const { categoryStats, menuStats, paymentStats, totalDiscountGiven, totalRevenue } = getSalesAnalytics()
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-3 sm:p-4">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
@@ -679,22 +679,22 @@ export default function MaharasaPOS() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
           {/* Menu Section */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 order-2 lg:order-1">
             {/* Category Filter */}
-            <div className="flex gap-2 flex-wrap mb-4">
+            <div className="flex gap-2 flex-wrap mb-3 lg:mb-4 overflow-x-auto pb-2">
               {categories.map((cat) => (
                 <Button
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedCategory(cat)}
-                  className={
+                  className={`text-xs lg:text-sm whitespace-nowrap ${
                     selectedCategory === cat
                       ? "bg-slate-700 hover:bg-slate-800"
                       : "border-slate-300 hover:bg-slate-100"
-                  }
+                  }`}
                 >
                   {cat}
                 </Button>
@@ -702,13 +702,13 @@ export default function MaharasaPOS() {
             </div>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
               {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
                   className="shadow-sm border-slate-200 bg-white hover:shadow-md transition-shadow"
                 >
-                  <CardContent className="p-3">
+                  <CardContent className="p-2 sm:p-3">
                     <div className="w-full aspect-square overflow-hidden rounded-lg bg-slate-100 mb-2">
                       <img
                         src={product.image || "/placeholder.svg"}
@@ -725,14 +725,14 @@ export default function MaharasaPOS() {
                           {product.category === "Makanan" ? "Mkn" : "Mnum"}
                         </Badge>
                       </div>
-                      <div className="flex items-center justify-between mt-2">
+                      <div className="flex flex-col gap-1.5 mt-2">
                         <span className="text-xs font-bold text-emerald-600">
                           Rp {product.price.toLocaleString("id-ID")}
                         </span>
                         <Button
                           size="sm"
                           onClick={() => addToCart(product)}
-                          className="h-7 px-2 text-xs bg-slate-700 hover:bg-slate-800"
+                          className="h-7 px-1.5 text-xs bg-slate-700 hover:bg-slate-800 w-full"
                         >
                           <Plus className="w-3 h-3 mr-1" />
                           Tambah
@@ -746,26 +746,26 @@ export default function MaharasaPOS() {
           </div>
 
           {/* Cart Section */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 order-1 lg:order-2">
             <Card className="sticky top-4 shadow-sm border-slate-200 bg-white">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-3 px-4 py-3">
                 <CardTitle className="flex items-center gap-2 text-slate-800 text-base">
-                  <ShoppingCart className="w-5 h-5" />
-                  Keranjang
+                  <ShoppingCart className="w-5 h-5 flex-shrink-0" />
+                  <span className="truncate">Keranjang</span>
                   {cart.length > 0 && (
-                    <Badge className="ml-auto bg-slate-700 text-white">{cart.reduce((s, i) => s + i.quantity, 0)}</Badge>
+                    <Badge className="ml-auto bg-slate-700 text-white text-xs">{cart.reduce((s, i) => s + i.quantity, 0)}</Badge>
                   )}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-4 py-3">
                 {cart.length === 0 ? (
                   <div className="text-center py-8">
                     <ShoppingCart className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                    <p className="text-slate-400 text-sm">Keranjang kosong</p>
+                    <p className="text-slate-400 text-xs sm:text-sm">Keranjang kosong</p>
                   </div>
                 ) : (
                   <>
-                    <div className="space-y-2 mb-4 max-h-72 overflow-y-auto pr-1">
+                    <div className="space-y-2 mb-4 max-h-60 sm:max-h-72 overflow-y-auto pr-1">
                       {cart.map((item, index) => (
                         <div key={`${item.id}-${index}`} className="p-2 bg-slate-50 rounded-lg border border-slate-200">
                           <div className="flex items-start justify-between gap-2">
@@ -851,14 +851,14 @@ export default function MaharasaPOS() {
 
       {/* Edit Cart Item Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md w-full max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-slate-800">Edit: {selectedProduct?.name}</DialogTitle>
+            <DialogTitle className="text-slate-800 text-base sm:text-lg truncate">Edit: {selectedProduct?.name}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {selectedProduct?.add_ons && selectedProduct.add_ons.length > 0 && (
               <div>
-                <h4 className="font-medium text-sm text-slate-700 mb-2">Add-On Tersedia</h4>
+                <h4 className="font-medium text-xs sm:text-sm text-slate-700 mb-2">Add-On Tersedia</h4>
                 <div className="space-y-2">
                   {selectedProduct.add_ons.map((addOn) => (
                     <div key={addOn.id} className="flex items-center space-x-2">
@@ -869,10 +869,10 @@ export default function MaharasaPOS() {
                       />
                       <label
                         htmlFor={`addon-${addOn.id}`}
-                        className="flex-1 flex justify-between text-sm cursor-pointer"
+                        className="flex-1 flex justify-between text-xs sm:text-sm cursor-pointer"
                       >
-                        <span>{addOn.name}</span>
-                        <span className="text-emerald-600 font-medium">
+                        <span className="truncate">{addOn.name}</span>
+                        <span className="text-emerald-600 font-medium flex-shrink-0 ml-1">
                           {addOn.price > 0 ? `+Rp ${addOn.price.toLocaleString("id-ID")}` : "Gratis"}
                         </span>
                       </label>
@@ -905,11 +905,11 @@ export default function MaharasaPOS() {
 
       {/* Payment Section Overlay */}
       {showPaymentSection && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-slate-800">Pembayaran</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-3 sm:p-4 z-50">
+          <div className="bg-white rounded-2xl w-full max-w-2xl sm:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="p-4 sm:p-6">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-800">Pembayaran</h2>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -919,69 +919,69 @@ export default function MaharasaPOS() {
                     setCashAmount("")
                     setSelectedPaymentCategory("cash")
                   }}
-                  className="w-8 h-8 p-0 hover:bg-slate-100"
+                  className="w-8 h-8 p-0 hover:bg-slate-100 flex-shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Left: Order Summary + Discount */}
-                <div className="space-y-4">
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                    <h3 className="font-semibold text-slate-800 mb-3 text-sm">Ringkasan Pesanan</h3>
-                    <div className="space-y-2 text-sm">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200">
+                    <h3 className="font-semibold text-slate-800 mb-2 sm:mb-3 text-sm">Ringkasan Pesanan</h3>
+                    <div className="space-y-2 text-xs sm:text-sm">
                       {cart.map((item, i) => (
                         <div key={i} className="flex justify-between text-slate-700">
-                          <span>{item.name} x{item.quantity}</span>
-                          <span>
+                          <span className="truncate mr-2">{item.name} x{item.quantity}</span>
+                          <span className="flex-shrink-0">
                             Rp {((item.price + item.selected_add_ons.reduce((s, a) => s + a.price, 0)) * item.quantity).toLocaleString("id-ID")}
                           </span>
                         </div>
                       ))}
                     </div>
-                    <Separator className="my-3" />
-                    <div className="space-y-1 text-sm">
+                    <Separator className="my-2 sm:my-3" />
+                    <div className="space-y-1 text-xs sm:text-sm">
                       <div className="flex justify-between text-slate-600">
                         <span>Subtotal</span>
-                        <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+                        <span className="flex-shrink-0">Rp {subtotal.toLocaleString("id-ID")}</span>
                       </div>
                       {discount && (
                         <div className="flex justify-between text-red-500">
                           <span>Diskon</span>
-                          <span>- Rp {discountAmount.toLocaleString("id-ID")}</span>
+                          <span className="flex-shrink-0">- Rp {discountAmount.toLocaleString("id-ID")}</span>
                         </div>
                       )}
-                      <div className="flex justify-between font-bold text-base text-slate-800 pt-1 border-t border-slate-200">
+                      <div className="flex justify-between font-bold text-sm sm:text-base text-slate-800 pt-1 border-t border-slate-200">
                         <span>Total</span>
-                        <span className="text-emerald-600">Rp {total.toLocaleString("id-ID")}</span>
+                        <span className="text-emerald-600 flex-shrink-0">Rp {total.toLocaleString("id-ID")}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Discount */}
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                    <h4 className="font-semibold text-slate-800 text-sm flex items-center gap-2 mb-3">
-                      <Percent className="w-4 h-4" />
-                      Diskon (Opsional)
+                  <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200">
+                    <h4 className="font-semibold text-slate-800 text-sm flex items-center gap-2 mb-2 sm:mb-3">
+                      <Percent className="w-4 h-4 flex-shrink-0" />
+                      <span>Diskon (Opsional)</span>
                     </h4>
                     {!discount ? (
                       <div className="space-y-3">
                         <RadioGroup
                           value={discountType}
                           onValueChange={(v: "percentage" | "fixed") => setDiscountType(v)}
-                          className="flex gap-4"
+                          className="flex gap-3 sm:gap-4 flex-wrap"
                         >
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="percentage" id="pct" />
-                            <Label htmlFor="pct" className="text-sm">Persen (%)</Label>
+                            <Label htmlFor="pct" className="text-xs sm:text-sm cursor-pointer">Persen (%)</Label>
                           </div>
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="fixed" id="fix" />
-                            <Label htmlFor="fix" className="text-sm">Nominal (Rp)</Label>
+                            <Label htmlFor="fix" className="text-xs sm:text-sm cursor-pointer">Nominal (Rp)</Label>
                           </div>
                         </RadioGroup>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-col sm:flex-row">
                           <Input
                             type="number"
                             placeholder={discountType === "percentage" ? "Contoh: 10" : "Contoh: 5000"}
@@ -993,7 +993,7 @@ export default function MaharasaPOS() {
                             onClick={applyDiscount}
                             size="sm"
                             disabled={!discountValue}
-                            className="bg-slate-700 hover:bg-slate-800"
+                            className="bg-slate-700 hover:bg-slate-800 text-xs sm:text-sm sm:w-auto"
                           >
                             Terapkan
                           </Button>
@@ -1017,43 +1017,43 @@ export default function MaharasaPOS() {
                 </div>
 
                 {/* Right: Payment Method */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <h3 className="font-semibold text-slate-800 text-sm">Pilih Metode Pembayaran</h3>
 
                   {/* Tabs */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {["cash", "debit", "qris", "creditCard", "voucher"].map((cat) => (
                       <Button
                         key={cat}
                         size="sm"
                         variant={selectedPaymentCategory === cat ? "default" : "outline"}
                         onClick={() => { setSelectedPaymentCategory(cat); setPaymentMethod("") }}
-                        className={
+                        className={`text-xs px-2 sm:px-3 h-8 sm:h-9 ${
                           selectedPaymentCategory === cat
-                            ? "bg-slate-700 hover:bg-slate-800 text-xs"
-                            : "border-slate-300 hover:bg-slate-100 text-xs"
-                        }
+                            ? "bg-slate-700 hover:bg-slate-800"
+                            : "border-slate-300 hover:bg-slate-100"
+                        }`}
                       >
-                        {cat === "creditCard" ? "Credit Card" : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        {cat === "creditCard" ? "CC" : cat.charAt(0).toUpperCase() + cat.slice(1)}
                       </Button>
                     ))}
                   </div>
 
                   {/* Payment Options */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                     {selectedPaymentCategory === "cash" && (
                       <div
-                        className={`p-3 border-2 rounded-xl cursor-pointer transition-colors col-span-2 sm:col-span-1 ${
+                        className={`p-2 sm:p-3 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-colors col-span-1 ${
                           paymentMethod === "cash" ? "border-emerald-500 bg-emerald-50" : "border-slate-200 hover:border-slate-300"
                         }`}
                         onClick={() => setPaymentMethod("cash")}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                            <Banknote className="w-5 h-5 text-emerald-600" />
+                        <div className="flex flex-col items-center gap-1.5 sm:gap-3">
+                          <div className="w-8 sm:w-10 h-8 sm:h-10 bg-emerald-100 rounded flex items-center justify-center">
+                            <Banknote className="w-4 sm:w-5 h-4 sm:h-5 text-emerald-600" />
                           </div>
-                          <div>
-                            <p className="font-medium text-slate-800 text-sm">Cash</p>
+                          <div className="text-center">
+                            <p className="font-medium text-slate-800 text-xs sm:text-sm">Cash</p>
                             <p className="text-xs text-slate-500">Tunai</p>
                           </div>
                         </div>
@@ -1064,18 +1064,18 @@ export default function MaharasaPOS() {
                       (paymentMethods[selectedPaymentCategory as keyof typeof paymentMethods] || []).map((method) => (
                         <div
                           key={method.id}
-                          className={`p-3 border-2 rounded-xl cursor-pointer transition-colors ${
+                          className={`p-2 sm:p-3 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-colors ${
                             paymentMethod === method.id ? "border-emerald-500 bg-emerald-50" : "border-slate-200 hover:border-slate-300"
                           }`}
                           onClick={() => setPaymentMethod(method.id)}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-col items-center gap-1.5">
                             <img
                               src={method.image || "/placeholder.svg"}
                               alt={method.name}
-                              className="w-10 h-10 object-contain rounded"
+                              className="w-8 sm:w-10 h-8 sm:h-10 object-contain rounded"
                             />
-                            <p className="font-medium text-slate-800 text-sm">{method.name}</p>
+                            <p className="font-medium text-slate-800 text-xs sm:text-sm text-center line-clamp-2">{method.name}</p>
                           </div>
                         </div>
                       ))}
@@ -1083,24 +1083,24 @@ export default function MaharasaPOS() {
 
                   {/* Cash Input with Calculator */}
                   {paymentMethod === "cash" && (
-                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-4">
+                    <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200 space-y-3 sm:space-y-4">
                       <div>
-                        <Label className="text-sm font-medium text-slate-700 mb-3 block">Jumlah Uang Tunai</Label>
-                        <div className="bg-white rounded-lg p-4 border-2 border-slate-300 text-right">
-                          <p className="text-3xl font-bold text-slate-800">
+                        <Label className="text-xs sm:text-sm font-medium text-slate-700 mb-2 sm:mb-3 block">Jumlah Uang Tunai</Label>
+                        <div className="bg-white rounded-lg p-3 sm:p-4 border-2 border-slate-300 text-right">
+                          <p className="text-2xl sm:text-3xl font-bold text-slate-800 truncate">
                             Rp {cashAmount ? Number(cashAmount).toLocaleString("id-ID") : "0"}
                           </p>
                         </div>
                       </div>
 
                       {/* Quick denomination buttons */}
-                      <div className="grid grid-cols-4 gap-2">
+                      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                         {[20000, 50000, 100000, 200000].map((amount) => (
                           <Button
                             key={amount}
                             onClick={() => setCashAmount(String(amount))}
                             variant={Number(cashAmount) === amount ? "default" : "outline"}
-                            className={`text-sm font-medium ${
+                            className={`h-9 sm:h-10 text-xs sm:text-sm font-medium px-1 sm:px-2 ${
                               Number(cashAmount) === amount
                                 ? "bg-emerald-600 hover:bg-emerald-700"
                                 : "border-slate-300 hover:bg-slate-100"
@@ -1112,7 +1112,7 @@ export default function MaharasaPOS() {
                       </div>
 
                       {/* Number pad calculator */}
-                      <div className="grid grid-cols-4 gap-2">
+                      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                         {[1, 2, 3, "C", 4, 5, 6, "00", 7, 8, 9, "x", "."]
                           .concat(cashAmount ? ["Hapus"] : [])
                           .concat(["OK"])
@@ -1139,14 +1139,14 @@ export default function MaharasaPOS() {
                                     setCashAmount(cashAmount + key)
                                   }
                                 }}
-                                className={`h-14 font-semibold text-lg ${
+                                className={`h-10 sm:h-14 font-semibold text-sm sm:text-lg ${
                                   isFunction
                                     ? key === "OK"
                                       ? "bg-emerald-600 hover:bg-emerald-700 text-white"
                                       : key === "Hapus"
                                       ? "bg-red-500 hover:bg-red-600 text-white"
-                                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
-                                    : "bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-900"
+                                      : "bg-slate-300 hover:bg-slate-400 text-slate-900 text-xs sm:text-sm"
+                                    : "bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-900 text-sm sm:text-lg"
                                 }`}
                               >
                                 {key}
@@ -1159,15 +1159,15 @@ export default function MaharasaPOS() {
                       <div className="space-y-2">
                         {cashAmount && Number(cashAmount) >= total && (
                           <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                            <p className="text-sm text-emerald-700">
-                              Kembalian: <span className="font-bold text-lg">Rp {getChange().toLocaleString("id-ID")}</span>
+                            <p className="text-xs sm:text-sm text-emerald-700">
+                              Kembalian: <span className="font-bold text-sm sm:text-lg">Rp {getChange().toLocaleString("id-ID")}</span>
                             </p>
                           </div>
                         )}
                         {cashAmount && Number(cashAmount) < total && Number(cashAmount) > 0 && (
                           <div className="bg-red-50 rounded-lg p-3 border border-red-200">
-                            <p className="text-sm text-red-700">
-                              Kurang: <span className="font-bold text-lg">Rp {(total - Number(cashAmount)).toLocaleString("id-ID")}</span>
+                            <p className="text-xs sm:text-sm text-red-700">
+                              Kurang: <span className="font-bold text-sm sm:text-lg">Rp {(total - Number(cashAmount)).toLocaleString("id-ID")}</span>
                             </p>
                           </div>
                         )}
@@ -1177,8 +1177,20 @@ export default function MaharasaPOS() {
                 </div>
               </div>
 
-              <Separator className="my-5" />
-              <div className="flex justify-end">
+              <Separator className="my-3 sm:my-5" />
+              <div className="flex justify-end gap-2">
+                <Button
+                  onClick={() => {
+                    setShowPaymentSection(false)
+                    setPaymentMethod("")
+                    setCashAmount("")
+                    setSelectedPaymentCategory("cash")
+                  }}
+                  variant="outline"
+                  className="text-xs sm:text-sm"
+                >
+                  Batal
+                </Button>
                 <Button
                   onClick={processPayment}
                   disabled={
@@ -1186,15 +1198,16 @@ export default function MaharasaPOS() {
                     (paymentMethod === "cash" && (!cashAmount || Number(cashAmount) < total)) ||
                     isProcessingPayment
                   }
-                  className="bg-emerald-600 hover:bg-emerald-700 px-8"
+                  className="bg-emerald-600 hover:bg-emerald-700 px-4 sm:px-8 text-xs sm:text-sm flex-1 sm:flex-none"
                 >
                   {isProcessingPayment ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 justify-center">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Memproses...
+                      <span className="hidden sm:inline">Memproses...</span>
+                      <span className="sm:hidden">...</span>
                     </div>
                   ) : (
-                    `Bayar Rp ${total.toLocaleString("id-ID")}`
+                    <span className="truncate">Bayar Rp {total.toLocaleString("id-ID")}</span>
                   )}
                 </Button>
               </div>
