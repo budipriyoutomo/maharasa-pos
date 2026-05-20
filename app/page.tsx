@@ -1081,27 +1081,97 @@ export default function MaharasaPOS() {
                       ))}
                   </div>
 
-                  {/* Cash Input */}
+                  {/* Cash Input with Calculator */}
                   {paymentMethod === "cash" && (
-                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                      <Label className="text-sm font-medium text-slate-700 mb-2 block">Jumlah Uang Tunai</Label>
-                      <Input
-                        type="number"
-                        placeholder="Masukkan nominal uang tunai"
-                        value={cashAmount}
-                        onChange={(e) => setCashAmount(e.target.value)}
-                        className="border-slate-300"
-                      />
-                      {cashAmount && Number(cashAmount) >= total && (
-                        <p className="text-sm text-emerald-600 font-medium mt-2">
-                          Kembalian: Rp {getChange().toLocaleString("id-ID")}
-                        </p>
-                      )}
-                      {cashAmount && Number(cashAmount) < total && Number(cashAmount) > 0 && (
-                        <p className="text-sm text-red-500 mt-2">
-                          Kurang: Rp {(total - Number(cashAmount)).toLocaleString("id-ID")}
-                        </p>
-                      )}
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-4">
+                      <div>
+                        <Label className="text-sm font-medium text-slate-700 mb-3 block">Jumlah Uang Tunai</Label>
+                        <div className="bg-white rounded-lg p-4 border-2 border-slate-300 text-right">
+                          <p className="text-3xl font-bold text-slate-800">
+                            Rp {cashAmount ? Number(cashAmount).toLocaleString("id-ID") : "0"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Quick denomination buttons */}
+                      <div className="grid grid-cols-4 gap-2">
+                        {[20000, 50000, 100000, 200000].map((amount) => (
+                          <Button
+                            key={amount}
+                            onClick={() => setCashAmount(String(amount))}
+                            variant={Number(cashAmount) === amount ? "default" : "outline"}
+                            className={`text-sm font-medium ${
+                              Number(cashAmount) === amount
+                                ? "bg-emerald-600 hover:bg-emerald-700"
+                                : "border-slate-300 hover:bg-slate-100"
+                            }`}
+                          >
+                            {(amount / 1000).toFixed(0)}K
+                          </Button>
+                        ))}
+                      </div>
+
+                      {/* Number pad calculator */}
+                      <div className="grid grid-cols-4 gap-2">
+                        {[1, 2, 3, "C", 4, 5, 6, "00", 7, 8, 9, "x", "."]
+                          .concat(cashAmount ? ["Hapus"] : [])
+                          .concat(["OK"])
+                          .map((key, idx) => {
+                            const isFunction = ["C", "00", "x", "Hapus", "OK"].includes(String(key))
+                            return (
+                              <Button
+                                key={idx}
+                                onClick={() => {
+                                  if (key === "C") {
+                                    setCashAmount("")
+                                  } else if (key === "Hapus") {
+                                    setCashAmount(cashAmount.slice(0, -1))
+                                  } else if (key === "x") {
+                                    // Multiply by 1000
+                                    const num = parseInt(cashAmount) || 0
+                                    setCashAmount(String(num * 1000))
+                                  } else if (key === "OK" || key === ".") {
+                                    // OK is just a visual button, . for decimals
+                                    if (key === ".") {
+                                      setCashAmount(cashAmount + ".")
+                                    }
+                                  } else {
+                                    setCashAmount(cashAmount + key)
+                                  }
+                                }}
+                                className={`h-14 font-semibold text-lg ${
+                                  isFunction
+                                    ? key === "OK"
+                                      ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                                      : key === "Hapus"
+                                      ? "bg-red-500 hover:bg-red-600 text-white"
+                                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                                    : "bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-900"
+                                }`}
+                              >
+                                {key}
+                              </Button>
+                            )
+                          })}
+                      </div>
+
+                      {/* Change info */}
+                      <div className="space-y-2">
+                        {cashAmount && Number(cashAmount) >= total && (
+                          <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                            <p className="text-sm text-emerald-700">
+                              Kembalian: <span className="font-bold text-lg">Rp {getChange().toLocaleString("id-ID")}</span>
+                            </p>
+                          </div>
+                        )}
+                        {cashAmount && Number(cashAmount) < total && Number(cashAmount) > 0 && (
+                          <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                            <p className="text-sm text-red-700">
+                              Kurang: <span className="font-bold text-lg">Rp {(total - Number(cashAmount)).toLocaleString("id-ID")}</span>
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
