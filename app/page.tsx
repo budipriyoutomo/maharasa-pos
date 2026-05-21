@@ -251,8 +251,6 @@ export default function MaharasaPOS() {
 
   // Discount
   const [discount, setDiscount] = useState<Discount | null>(null)
-  const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage")
-  const [discountValue, setDiscountValue] = useState("")
 
   // Transactions (mockup state)
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions)
@@ -360,18 +358,8 @@ export default function MaharasaPOS() {
 
   const total = Math.max(0, subtotal - discountAmount)
 
-  const applyDiscount = () => {
-    const value = parseFloat(discountValue)
-    if (isNaN(value) || value <= 0) return alert("Masukkan nilai diskon yang valid!")
-    if (discountType === "percentage" && value > 100) return alert("Persentase tidak boleh lebih dari 100%!")
-    if (discountType === "fixed" && value > subtotal) return alert("Diskon tidak boleh melebihi subtotal!")
-    setDiscount({ type: discountType, value })
-    setDiscountValue("")
-  }
-
   const removeDiscount = () => {
     setDiscount(null)
-    setDiscountValue("")
   }
 
   // --- Payment ---
@@ -961,54 +949,59 @@ export default function MaharasaPOS() {
 
                   {/* Discount */}
                   <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200">
-                    <h4 className="font-semibold text-slate-800 text-sm flex items-center gap-2 mb-2 sm:mb-3">
+                    <h4 className="font-semibold text-slate-800 text-sm flex items-center gap-2 mb-3 sm:mb-4">
                       <Percent className="w-4 h-4 flex-shrink-0" />
                       <span>Diskon (Opsional)</span>
                     </h4>
                     {!discount ? (
-                      <div className="space-y-3">
-                        <RadioGroup
-                          value={discountType}
-                          onValueChange={(v: "percentage" | "fixed") => setDiscountType(v)}
-                          className="flex gap-3 sm:gap-4 flex-wrap"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="percentage" id="pct" />
-                            <Label htmlFor="pct" className="text-xs sm:text-sm cursor-pointer">Persen (%)</Label>
+                      <div className="space-y-3 sm:space-y-4">
+                        {/* Percentage Discounts */}
+                        <div>
+                          <p className="text-xs sm:text-sm text-slate-600 font-medium mb-2">Diskon Persen</p>
+                          <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                            {[5, 10, 15, 20].map((pct) => (
+                              <button
+                                key={`pct-${pct}`}
+                                onClick={() => setDiscount({ type: "percentage", value: pct })}
+                                className="p-2 sm:p-3 border-2 border-slate-300 rounded-lg hover:border-slate-400 hover:bg-white transition-colors"
+                              >
+                                <p className="font-bold text-slate-800 text-xs sm:text-sm">{pct}%</p>
+                              </button>
+                            ))}
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="fixed" id="fix" />
-                            <Label htmlFor="fix" className="text-xs sm:text-sm cursor-pointer">Nominal (Rp)</Label>
+                        </div>
+
+                        {/* Fixed Amount Discounts */}
+                        <div>
+                          <p className="text-xs sm:text-sm text-slate-600 font-medium mb-2">Diskon Nominal</p>
+                          <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                            {[5000, 10000, 25000, 50000].map((amount) => (
+                              <button
+                                key={`fix-${amount}`}
+                                onClick={() => setDiscount({ type: "fixed", value: amount })}
+                                disabled={amount > subtotal}
+                                className={`p-2 sm:p-3 border-2 rounded-lg transition-colors ${
+                                  amount > subtotal
+                                    ? "border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed"
+                                    : "border-slate-300 hover:border-slate-400 hover:bg-white"
+                                }`}
+                              >
+                                <p className="font-bold text-xs sm:text-sm">{(amount / 1000).toFixed(0)}K</p>
+                              </button>
+                            ))}
                           </div>
-                        </RadioGroup>
-                        <div className="flex gap-2 flex-col sm:flex-row">
-                          <Input
-                            type="number"
-                            placeholder={discountType === "percentage" ? "Contoh: 10" : "Contoh: 5000"}
-                            value={discountValue}
-                            onChange={(e) => setDiscountValue(e.target.value)}
-                            className="flex-1 border-slate-300 text-sm"
-                          />
-                          <Button
-                            onClick={applyDiscount}
-                            size="sm"
-                            disabled={!discountValue}
-                            className="bg-slate-700 hover:bg-slate-800 text-xs sm:text-sm sm:w-auto"
-                          >
-                            Terapkan
-                          </Button>
                         </div>
                       </div>
                     ) : (
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-slate-700">
+                        <span className="text-xs sm:text-sm text-slate-700 truncate pr-2">
                           Diskon{" "}
                           {discount.type === "percentage"
                             ? `${discount.value}%`
                             : `Rp ${discount.value.toLocaleString("id-ID")}`}{" "}
                           diterapkan
                         </span>
-                        <Button onClick={removeDiscount} variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">
+                        <Button onClick={removeDiscount} variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50 text-xs flex-shrink-0">
                           Hapus
                         </Button>
                       </div>
