@@ -252,6 +252,9 @@ export default function MaharasaPOS() {
   // Discount
   const [discount, setDiscount] = useState<Discount | null>(null)
 
+  // Mobile Cart Drawer
+  const [showMobileCart, setShowMobileCart] = useState(false)
+
   // Transactions (mockup state)
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions)
 
@@ -669,7 +672,7 @@ export default function MaharasaPOS() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
           {/* Menu Section */}
-          <div className="lg:col-span-2 order-2 lg:order-1">
+          <div className="lg:col-span-2">
             {/* Category Filter */}
             <div className="flex gap-2 flex-wrap mb-3 lg:mb-4 overflow-x-auto pb-2">
               {categories.map((cat) => (
@@ -690,7 +693,7 @@ export default function MaharasaPOS() {
             </div>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2 sm:gap-3 pb-20 lg:pb-0">
               {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
@@ -733,8 +736,8 @@ export default function MaharasaPOS() {
             </div>
           </div>
 
-          {/* Cart Section */}
-          <div className="lg:col-span-1 order-1 lg:order-2">
+          {/* Cart Section - Hidden on mobile/tablet, shown on large screens */}
+          <div className="hidden lg:block lg:col-span-1">
             <Card className="sticky top-4 shadow-sm border-slate-200 bg-white">
               <CardHeader className="pb-3 px-4 py-3">
                 <CardTitle className="flex items-center gap-2 text-slate-800 text-base">
@@ -770,7 +773,7 @@ export default function MaharasaPOS() {
                                 </div>
                               )}
                               {item.notes && (
-                                <p className="text-xs text-slate-400 italic mt-1 truncate">"{item.notes}"</p>
+                                <p className="text-xs text-slate-400 italic mt-1 truncate">&quot;{item.notes}&quot;</p>
                               )}
                             </div>
                             <div className="flex items-center gap-1 flex-shrink-0">
@@ -835,6 +838,144 @@ export default function MaharasaPOS() {
             </Card>
           </div>
         </div>
+
+        {/* Floating Cart Button - Visible on mobile/tablet only */}
+        <div className="lg:hidden fixed bottom-4 right-4 z-40">
+          <Button
+            onClick={() => setShowMobileCart(true)}
+            className="w-16 h-16 rounded-full bg-emerald-600 hover:bg-emerald-700 shadow-lg relative"
+          >
+            <ShoppingCart className="w-6 h-6" />
+            {cart.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                {cart.reduce((s, i) => s + i.quantity, 0)}
+              </span>
+            )}
+          </Button>
+        </div>
+
+        {/* Mobile Cart Drawer */}
+        {showMobileCart && (
+          <div className="lg:hidden fixed inset-0 z-50">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setShowMobileCart(false)}
+            />
+            {/* Drawer */}
+            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] overflow-hidden shadow-xl animate-in slide-in-from-bottom duration-300">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                <h2 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5" />
+                  Keranjang
+                  {cart.length > 0 && (
+                    <Badge className="bg-slate-700 text-white text-xs">{cart.reduce((s, i) => s + i.quantity, 0)}</Badge>
+                  )}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowMobileCart(false)}
+                  className="w-8 h-8 p-0"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="p-4 overflow-y-auto max-h-[calc(85vh-180px)]">
+                {cart.length === 0 ? (
+                  <div className="text-center py-12">
+                    <ShoppingCart className="w-16 h-16 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-400">Keranjang kosong</p>
+                    <p className="text-slate-400 text-sm mt-1">Tambahkan menu untuk memulai</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {cart.map((item, index) => (
+                      <div key={`mobile-${item.id}-${index}`} className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-sm text-slate-800">{item.name}</p>
+                            <p className="text-sm text-emerald-600 font-medium">Rp {item.price.toLocaleString("id-ID")}</p>
+                            {item.selected_add_ons.length > 0 && (
+                              <div className="mt-1.5">
+                                {item.selected_add_ons.map((a) => (
+                                  <p key={a.id} className="text-xs text-slate-500">
+                                    + {a.name} (+Rp {a.price.toLocaleString("id-ID")})
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                            {item.notes && (
+                              <p className="text-xs text-slate-400 italic mt-1.5">&quot;{item.notes}&quot;</p>
+                            )}
+                          </div>
+                          <div className="flex flex-col items-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => { editCartItem(index); setShowMobileCart(false); }}
+                              className="h-8 px-2 text-slate-500 hover:text-slate-800"
+                            >
+                              <Edit className="w-4 h-4 mr-1" />
+                              Edit
+                            </Button>
+                            <div className="flex items-center gap-2 bg-white rounded-lg border border-slate-200 p-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => updateQuantity(index, -1)}
+                                className="w-8 h-8 p-0"
+                              >
+                                <Minus className="w-4 h-4" />
+                              </Button>
+                              <span className="w-8 text-center font-semibold">{item.quantity}</span>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => updateQuantity(index, 1)}
+                                className="w-8 h-8 p-0"
+                              >
+                                <Plus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {cart.length > 0 && (
+                <div className="p-4 border-t border-slate-200 bg-white">
+                  <div className="space-y-2 mb-4">
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span>Subtotal</span>
+                      <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+                    </div>
+                    {discount && (
+                      <div className="flex justify-between text-sm text-red-500">
+                        <span>Diskon</span>
+                        <span>- Rp {discountAmount.toLocaleString("id-ID")}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between font-bold text-lg text-slate-800 pt-2 border-t border-slate-200">
+                      <span>Total</span>
+                      <span className="text-emerald-600">Rp {total.toLocaleString("id-ID")}</span>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => { setShowMobileCart(false); setShowPaymentSection(true); }}
+                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-base font-semibold"
+                  >
+                    Checkout - Rp {total.toLocaleString("id-ID")}
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Edit Cart Item Dialog */}
